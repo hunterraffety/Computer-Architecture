@@ -103,7 +103,7 @@ class CPU:
         # In run() in your switch, exit the loop if a HLT instruction is encountered, regardless of whether or not there are more lines of code in the LS-8 program you loaded.
             if instruction is HLT:
                 running = False
-                self.pc += 1
+                # self.pc += 1
             # We can consider HLT to be similar to Python's exit() in that we stop whatever we are doing, wherever we are.
             
             # Step 5: Add the LDI instruction
