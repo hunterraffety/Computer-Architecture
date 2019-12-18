@@ -32,7 +32,8 @@ class CPU:
         """Construct a new CPU."""
         self.ram = {} #  our '256' bytes of memory storage
         self.reg = [0] * 8 # 8 general purpose registers
-        self.pc = 0 # program counter, index into memory of the current instruction
+        self.pc = 0  # program counter, index into memory of the current instruction
+        self.running = True # moves running into class constructor
 
     def load(self):
         """Load a program into memory."""
@@ -46,20 +47,20 @@ class CPU:
             0b10000010, # LDI R0,8 - 130
             0b00000000,
             0b00001000, # - 8
-            0b01000111, # PRN R0
+            0b01000111, # PRN R0 # 71
             0b00000000,
             0b00000001, # HLT - 1
         ]
 
         for instruction in program:
-            self.ram[address] = instruction
-            address += 1
+            self.ram[address] = instruction # ram_write method
+            address += 1 # counter bump
 
-    def ram_read(self): # should accept the address to read and return the value stored there.
-        pass
+    def ram_read(self, address): # should accept the address to read and return the value stored there.
+        return self.ram[address]
 
-    def ram_write(self): # should accept a value to write, and the address to write it to.
-        pass
+    def ram_write(self, address, instruction): # should accept a value to write, and the address to write it to.
+        self.ram[address] = instruction
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -95,7 +96,7 @@ class CPU:
         running = True
 
         while running:
-            instruction = self.ram[self.pc] # sets current instruction. looks in the ram dict to grab the current instruction as referenced by the pc count.
+            instruction = self.ram_read(self.pc) # sets current instruction by invoking ram_read method and passing count as param. Looks in the ram dict to grab the current instruction as referenced by the pc count.
             print(instruction)
         # Step 4: Implement the HLT instruction handler
         # Add the HLT instruction definition to cpu.py so that you can refer to it by name instead of by numeric value.
@@ -109,16 +110,16 @@ class CPU:
             # This instruction sets a specified register to a specified value.
             # See the LS-8 spec for the details of what this instruction does and its opcode value.
             elif instruction is LDI:
-                register_number = self.reg[self.pc + 1]
-                self.reg[register_number] = self.ram[self.pc + 2]
+                register_number = self.reg[self.pc + 1] # operand A
+                self.reg[register_number] = self.ram[self.pc + 2] # operand B
                 self.pc += 3 # 3 steps PC ^^
 
             # Step 6: Add the PRN instruction
             # This is a very similar process to adding LDI, but the handler is simpler. See the LS-8 spec.
             # At this point, you should be able to run the program and have it print 8 to the console!
             elif instruction is PRN:
-                idx = self.ram[self.pc + 1]
-                register_number = self.reg[self.pc + 1]
+                idx = self.ram[self.pc + 1] # operand A
+                register_number = self.reg[self.pc + 1] # I am not sure what this does. I did it in LDI too.
                 self.pc += 2 # 2 step PC ^^
 
             else:
