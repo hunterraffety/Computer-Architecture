@@ -95,34 +95,35 @@ class CPU:
         running = True
 
         while running:
-            instruction = self.ram[self.pc]
+            instruction = self.ram[self.pc] # sets current instruction. looks in the ram dict to grab the current instruction as referenced by the pc count.
             print(instruction)
         # Step 4: Implement the HLT instruction handler
         # Add the HLT instruction definition to cpu.py so that you can refer to it by name instead of by numeric value.
         # In run() in your switch, exit the loop if a HLT instruction is encountered, regardless of whether or not there are more lines of code in the LS-8 program you loaded.
-        if instruction is HLT:
-            running = False
-        # We can consider HLT to be similar to Python's exit() in that we stop whatever we are doing, wherever we are.
-        
-        # Step 5: Add the LDI instruction
-        # This instruction sets a specified register to a specified value.
-        # See the LS-8 spec for the details of what this instruction does and its opcode value.
-        elif instruction is LDI:
-            register_number = self.reg[self.pc + 1]
-            self.reg[register_number] = self.ram[self.pc + 2]
-            self.pc += 3 # 3 steps PC ^^
+            if instruction is HLT:
+                running = False
+                self.pc += 1
+            # We can consider HLT to be similar to Python's exit() in that we stop whatever we are doing, wherever we are.
+            
+            # Step 5: Add the LDI instruction
+            # This instruction sets a specified register to a specified value.
+            # See the LS-8 spec for the details of what this instruction does and its opcode value.
+            elif instruction is LDI:
+                register_number = self.reg[self.pc + 1]
+                self.reg[register_number] = self.ram[self.pc + 2]
+                self.pc += 3 # 3 steps PC ^^
 
-        # Step 6: Add the PRN instruction
-        # This is a very similar process to adding LDI, but the handler is simpler. See the LS-8 spec.
-        # At this point, you should be able to run the program and have it print 8 to the console!
-        elif instruction is PRN:
-            idx = self.ram[self.pc + 1]
-            register_number = self.reg[self.pc + 1]
-            self.pc += 2 # 2 step PC ^^
+            # Step 6: Add the PRN instruction
+            # This is a very similar process to adding LDI, but the handler is simpler. See the LS-8 spec.
+            # At this point, you should be able to run the program and have it print 8 to the console!
+            elif instruction is PRN:
+                idx = self.ram[self.pc + 1]
+                register_number = self.reg[self.pc + 1]
+                self.pc += 2 # 2 step PC ^^
 
-        else:
-            print(f"Unknown instruction at index {self.pc}")
-            sys.exit(1)
+            else:
+                print(f"Unknown instruction at index {self.pc}")
+                sys.exit(1)
 """
 base 10, decimal: 0-9
 base 2, binary: 0, 1
