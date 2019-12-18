@@ -1,3 +1,18 @@
+'''
+    LDI: load "immediate", store a value in a register, or "set this register to this value".
+    PRN: a pseudo-instruction that prints the numeric value stored in a register.
+    HLT: halt the CPU and exit the emulator.
+'''
+
+'''
+10000010 # LDI R0,8
+00000000
+00001000
+01000111 # PRN R0
+00000000
+00000001 # HLT
+'''
+
 """CPU functionality."""
 
 import sys
@@ -7,7 +22,10 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
-        pass
+        self.ram = {} #  our '256' bytes of memory storage
+        self.reg = [0] * 8 # 8 general purpose registers
+        self.pc = 0
+        # pass
 
     def load(self):
         """Load a program into memory."""
@@ -30,6 +48,11 @@ class CPU:
             self.ram[address] = instruction
             address += 1
 
+    def ram_read(self): # should accept the address to read and return the value stored there.
+        pass
+
+    def ram_write(self): # should accept a value to write, and the address to write it to.
+        pass
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -62,4 +85,29 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
+        # Step 4: Implement the HLT instruction handler
+        # Add the HLT instruction definition to cpu.py so that you can refer to it by name instead of by numeric value.
+        # In run() in your switch, exit the loop if a HLT instruction is encountered, regardless of whether or not there are more lines of code in the LS-8 program you loaded.
+        # We can consider HLT to be similar to Python's exit() in that we stop whatever we are doing, wherever we are.
+        
+        # Step 5: Add the LDI instruction
+        # This instruction sets a specified register to a specified value.
+        # SeetheLS - 8spec for the details of what this instructions does and its opcode value.
+        
+        # Step 6: Add the PRN instruction
+        # This is a very similar process to adding LDI, but the handler is simpler. See the LS-8 spec.
+        # At this point, you should be able to run the program and have it print 8 to the console!
+
         pass
+
+"""
+base 10, decimal: 0-9
+base 2, binary: 0, 1
+base 16, hex: 0-9, a-f
+
+dec: 33
+binary: 100001
+00000011 = 3
+00101010 = 42
+128, 64, 32, 16, 8, 4, 2, 1 etc.
+"""
