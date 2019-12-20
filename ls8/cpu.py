@@ -40,17 +40,34 @@ class CPU:
 
         address = 0
 
+        program = sys.argv[1] # takes in argument when executing file.
+
+        # throw back thursday
+        with open(program) as p:
+            for line in p:
+                l = line.split("#")
+                print(f"l: {l}") 
+                print(f"l[0]: {l[0]}") # checking first item
+                l[0] = l[0].strip() # removes whitespace from line with strip()
+                print(f"l[0].strip(): {l[0].strip()}")
+                if l[0] is "":
+                    continue
+                
+                instruction = int(l[0], 2) # grabs the binary from the line, ensures numbers, ensures base 2
+                self.ram_write(address, instruction)
+                address += 1
+
         # For now, we've just hardcoded a program:
 
-        program = [
-            # From print8.ls8
-            0b10000010, # LDI R0,8 - 130
-            0b00000000,
-            0b00001000, # - 8
-            0b01000111, # PRN R0 # 71
-            0b00000000,
-            0b00000001, # HLT - 1
-        ]
+        # program = [
+        #     # From print8.ls8
+        #     0b10000010, # LDI R0,8 - 130
+        #     0b00000000,
+        #     0b00001000, # - 8
+        #     0b01000111, # PRN R0 # 71
+        #     0b00000000,
+        #     0b00000001, # HLT - 1
+        # ]
 
         for instruction in program:
             self.ram[address] = instruction # ram_write method
@@ -68,6 +85,14 @@ class CPU:
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
         #elif op == "SUB": etc
+        elif op == "SUB":
+            self.reg[reg_a] -= self.reg[reg_b]
+
+        elif op == "MUL":
+            self.reg[reg_a] *= self.reg[reg_b]
+
+        if op == "DIV":
+            self.reg[reg_a] /= self.reg[reg_b]
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -103,7 +128,7 @@ class CPU:
         # In run() in your switch, exit the loop if a HLT instruction is encountered, regardless of whether or not there are more lines of code in the LS-8 program you loaded.
             if instruction is HLT:
                 running = False
-                # self.pc += 1
+                self.pc += 1
             # We can consider HLT to be similar to Python's exit() in that we stop whatever we are doing, wherever we are.
             
             # Step 5: Add the LDI instruction
