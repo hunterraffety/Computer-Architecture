@@ -5,6 +5,44 @@
 '''
 
 '''
+ALU Ops
+ADD  10100000 00000aaa 00000bbb
+SUB  10100001 00000aaa 00000bbb
+MUL  10100010 00000aaa 00000bbb
+DIV  10100011 00000aaa 00000bbb
+MOD  10100100 00000aaa 00000bbb
+
+INC  01100101 00000rrr
+DEC  01100110 00000rrr
+
+CMP  10100111 00000aaa 00000bbb
+
+AND  10101000 00000aaa 00000bbb
+NOT  01101001 00000rrr
+OR   10101010 00000aaa 00000bbb
+XOR  10101011 00000aaa 00000bbb
+SHL  10101100 00000aaa 00000bbb
+SHR  10101101 00000aaa 00000bbb
+'''
+
+'''
+PC Mutators
+CALL 01010000 00000rrr
+RET  00010001
+
+INT  01010010 00000rrr
+IRET 00010011
+
+JMP  01010100 00000rrr
+JEQ  01010101 00000rrr
+JNE  01010110 00000rrr
+JGT  01010111 00000rrr
+JLT  01011000 00000rrr
+JLE  01011001 00000rrr
+JGE  01011010 00000rrr
+'''
+
+'''
 10000010 # LDI R0,8
 00000000
 00001000
@@ -33,7 +71,8 @@ class CPU:
         self.ram = {} #  our '256' bytes of memory storage
         self.reg = [0] * 8 # 8 general purpose registers
         self.pc = 0  # program counter, index into memory of the current instruction
-        self.running = True # moves running into class constructor
+        self.running = True  # moves running into class constructor
+        self.flag = 0b00000000
 
     def load(self):
         """Load a program into memory."""
@@ -93,6 +132,7 @@ class CPU:
 
         if op == "DIV":
             self.reg[reg_a] /= self.reg[reg_b]
+
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -115,6 +155,10 @@ class CPU:
             print(" %02X" % self.reg[i], end='')
 
         print()
+
+# Add the CMP instruction and equal flag to your LS-8.
+# Add the JMP instruction.
+# Add the JEQ and JNE instructions.
 
     def run(self):
         """Run the CPU."""
